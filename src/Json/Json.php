@@ -41,7 +41,7 @@ class Json
             $this->dataObject = $data;
             $this->data = Util::objectToArray($data);
         } else {
-            throw new \Exception('Unable to construct Response Entity');
+            throw new \Exception('Unable to construct Json object');
         }
         $this->prettyPrint = $prettyPrint;
     }
@@ -136,6 +136,85 @@ class Json
             return json_encode($this->data, JSON_PRETTY_PRINT);
         }
         return json_encode($this->data);
+    }
+
+    /**
+     * Flatten a multi-dimensional associative array with dots.
+     *
+     * @param array $array
+     * @param string $prepend
+     * @return array
+     */
+    protected static function arrayDot($array, $prepend = '')
+    {
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $results = array_merge($results, static::dot($value, $prepend . $key . '.'));
+            } else {
+                $results[$prepend . $key] = $value;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get an item from an array using "dot" notation.
+     *
+     * @param array $array
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    protected static function arrayGet($array, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $array;
+        }
+
+        if (isset($array[$key])) {
+            return $array[$key];
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
+                return value($default);
+            }
+
+            $array = $array[$segment];
+        }
+
+        return $array;
+    }
+
+    /**
+     * Check if an item exists in an array using "dot" notation.
+     *
+     * @param  array $array
+     * @param  string $key
+     * @return bool
+     */
+    protected static function arrayHas($array, $key)
+    {
+        if (empty($array) || is_null($key)) {
+            return false;
+        }
+
+        if (array_key_exists($key, $array)) {
+            return true;
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
+                return false;
+            }
+
+            $array = $array[$segment];
+        }
+
+        return true;
     }
 
 }

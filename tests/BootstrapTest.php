@@ -9,7 +9,11 @@
  * file that was distributed with this source code.
  */
 
-class ConstructorTest extends BootstrapTest
+require __DIR__.'/../vendor/autoload.php';
+
+use Yadakhov\Json;
+
+class BootstrapTest extends \PHPUnit_Framework_TestCase
 {
 
 }

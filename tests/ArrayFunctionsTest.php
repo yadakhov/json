@@ -9,11 +9,12 @@
  * file that was distributed with this source code.
  */
 
-require __DIR__.'/../vendor/autoload.php';
-
-use Yadakhov\Json;
-
-class TestFixture extends \PHPUnit_Framework_TestCase
+class ArrayFunctionsTest extends BootstrapTest
 {
+    public function testArrayDot()
+    {
+        $json = new Json;
+        $this->invokeMethod($json, 'arrayDot', array('passwordToCrypt'));
+    }
 
 }
