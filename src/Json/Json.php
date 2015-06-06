@@ -35,11 +35,11 @@ class Json
             $data = json_decode($dataOld);
         }
         if (is_array($data)) {
-            $this->dataObject = Util::arrayToObject($data);
+//            $this->dataObject = Util::arrayToObject($data);
             $this->data = $data;
         } elseif (is_object($data)) {
             $this->dataObject = $data;
-            $this->data = Util::objectToArray($data);
+//            $this->data = Util::objectToArray($data);
         } else {
             throw new \Exception('Unable to construct Json object');
         }
@@ -145,13 +145,13 @@ class Json
      * @param string $prepend
      * @return array
      */
-    protected static function arrayDot($array, $prepend = '')
+    public static function arrayDot($array, $prepend = '')
     {
         $results = [];
 
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                $results = array_merge($results, static::dot($value, $prepend . $key . '.'));
+                $results = array_merge($results, static::arrayDot($value, $prepend . $key . '.'));
             } else {
                 $results[$prepend . $key] = $value;
             }
@@ -168,7 +168,7 @@ class Json
      * @param mixed $default
      * @return mixed
      */
-    protected static function arrayGet($array, $key, $default = null)
+    public static function arrayGet($array, $key, $default = null)
     {
         if (is_null($key)) {
             return $array;
@@ -180,7 +180,7 @@ class Json
 
         foreach (explode('.', $key) as $segment) {
             if (!is_array($array) || !array_key_exists($segment, $array)) {
-                return value($default);
+                return $default;
             }
 
             $array = $array[$segment];
@@ -196,7 +196,7 @@ class Json
      * @param  string $key
      * @return bool
      */
-    protected static function arrayHas($array, $key)
+    public static function arrayHas($array, $key)
     {
         if (empty($array) || is_null($key)) {
             return false;
