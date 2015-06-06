@@ -1,0 +1,29 @@
+{
+    "name": "yadakhov/json",
+    "type": "library",
+    "description": "A simple API extension class for Json.",
+    "keywords": [
+        "json",
+        "array"
+    ],
+    "homepage": "https://github.com/yadakhov/json",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yada Khov",
+            "email": "yada.khov@gmail.com",
+            "homepage": "http://yadakhov.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Yadakhov": "src"
+        }
+    }
+}
