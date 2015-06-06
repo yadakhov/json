@@ -30,16 +30,14 @@ class Json
     public function __construct($data = [], $prettyPrint = false)
     {
         // convert json string to object
-        if (is_string($data)) {
-            $dataOld = $data;
-            $data = json_decode($dataOld);
-        }
-        if (is_array($data)) {
-//            $this->dataObject = Util::arrayToObject($data);
-            $this->data = $data;
-        } elseif (is_object($data)) {
-            $this->dataObject = $data;
-//            $this->data = Util::objectToArray($data);
+        if (is_null($data)) {
+            $this->data = null;
+        } elseif (is_string($data)) {
+
+        } elseif (is_array($data)) {
+
+        } elseif ($data instanceof \stdClass) {
+
         } else {
             throw new \Exception('Unable to construct Json object');
         }
@@ -52,23 +50,17 @@ class Json
      */
     protected $data = null;
 
+    /**
+     * Weather or not to use indentation in the json
+     * @var bool
+     */
     protected $prettyPrint = false;
 
     /**
-     * @return array|null
+     * The indentation.  use \t for tabs
+     * @var string
      */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param array|null $data
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
+    protected $indentation = '  ';
 
     /**
      * @return boolean
@@ -107,7 +99,7 @@ class Json
      */
     public function set($key, $value)
     {
-        return array_set($this->data, $key, $value);
+        return Jason::arraySet($this->data, $key, $value);
     }
 
     public function toArray()
@@ -158,6 +150,39 @@ class Json
         }
 
         return $results;
+    }
+
+    /**
+     * Set an array item to a given value using "dot" notation.
+     * If no key is given to the method, the entire array will be replaced.
+     *
+     * @param array $array
+     * @param string $key
+     * @param mixed $value
+     * @return array
+     */
+    public static function arraySet(&$array, $key, $value)
+    {
+        if (is_null($key)) return $array = $value;
+
+        $keys = explode('.', $key);
+
+        while (count($keys) > 1) {
+            $key = array_shift($keys);
+
+            // If the key doesn't exist at this depth, we will just create an empty array
+            // to hold the next value, allowing us to create the arrays to hold final
+            // values at the correct depth. Then we'll keep digging into the array.
+            if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+                $array[$key] = [];
+            }
+
+            $array =& $array[$key];
+        }
+
+        $array[array_shift($keys)] = $value;
+
+        return $array;
     }
 
     /**
