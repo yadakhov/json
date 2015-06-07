@@ -47,7 +47,7 @@ class Json
 
         } elseif ($body instanceof \stdClass) {
             $this->body = $body;
-            $this->bodyType = 'strClass';
+            $this->bodyType = 'stdClass';
         } else {
             throw new \Exception('Unable to construct Json object');
         }
