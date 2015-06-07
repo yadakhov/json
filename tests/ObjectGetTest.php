@@ -14,9 +14,30 @@ use Yadakhov\Json;
 class ObjectGetTest extends BootstrapTest
 {
 
-    public function testPassingNullToConstructor()
+    public function testSimpleObject()
     {
+        $obj = new stdClass();
+        $obj->name = 'Yada';
 
+        $this->assertEquals('Yada', Json::objectGet($obj, 'name'));
+    }
+
+    public function testTwoLevelObject()
+    {
+        $obj = new stdClass();
+        $obj->developer = new stdClass();
+        $obj->developer->name = 'Yada';
+
+        $this->assertEquals('Yada', Json::objectGet($obj, 'developer.name'));
+    }
+
+    public function testTwoLevelObjectDefault()
+    {
+        $obj = new stdClass();
+        $obj->developer = new stdClass();
+        $obj->developer->name = 'Yada';
+
+        $this->assertEquals('default', Json::objectGet($obj, 'developer.name.notexist', 'default'));
     }
 
 }

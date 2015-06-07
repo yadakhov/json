@@ -251,15 +251,15 @@ class Json implements JsonSerializable
         }
 
         if (property_exists($object, $key)) {
-            return $object->key;
+            return $object->$key;
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (!is_object($object) || !property_exists($object, $key)) {
+            if (property_exists($object, $segment)) {
+                $object = $object->$segment;
+            } else {
                 return value($default);
             }
-
-            $object = $object->$segment;
         }
 
         return $object;
