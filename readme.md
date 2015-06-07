@@ -1,10 +1,10 @@
-# Json
+# [Json](http://github.com/yadakhov/json)
 
-A simple API extension class for Json. [http://github.com/yadakhov/json](http://github.com/yadakhov/json)
+A simple wrapper class for Json.
+
+The goal of the package to to provide simple syntax such as dot notation to work with Json datatype in PHP.
 
 Use Json as a first class object in PHP.
-
-The goal of the package to to provide simple syntax such as dot notation to set and get Json field.
 
 ## Installation
 
@@ -30,13 +30,14 @@ require 'vendor/autoload.php';
 use Yadakhov\Json;
 
 // Instantiate a new Json object using standard PHP array
-$json = new Json(
-    [
-        'developer' => [
-            'firstName' => 'Yada'
-        ]
-    ]
+
+$data = array(
+    'developer' => array(
+        'firstName' => 'Yada'
+    )
 );
+
+$json = new Json($data);
 
 echo $json;  // Object auto convert to string.  Print: {"developer":{"firstName":"Yada"}}
 
