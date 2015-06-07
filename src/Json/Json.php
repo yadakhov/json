@@ -68,16 +68,10 @@ class Json
     protected $bodyType = 'array';
 
     /**
-     * Weather or not to use indentation in the json
+     *  Wether or not to use pretty print
      * @var bool
      */
     protected $prettyPrint = false;
-
-    /**
-     * The indentation.  use \t for tabs
-     * @var string
-     */
-    protected $indentation = '  ';
 
     /**
      * @return null
@@ -88,11 +82,13 @@ class Json
     }
 
     /**
-     * @param null $body
+     * @param $body
+     * @return $this
      */
     public function setBody($body)
     {
         $this->body = $body;
+        return $this;
     }
 
     /**
@@ -167,6 +163,16 @@ class Json
     }
 
     /**
+     * To string
+     *
+     * @return mixed|string|void
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
      * Convert object to array recursively
      *
      * @param $obj
@@ -200,16 +206,6 @@ class Json
         // Convert the json string to a stdClass()
         $object = json_decode($json);
         return $object;
-    }
-
-    /**
-     * To string
-     *
-     * @return mixed|string|void
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 
 }
