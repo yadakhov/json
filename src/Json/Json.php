@@ -11,6 +11,7 @@
 
 namespace Yadakhov;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -21,39 +22,6 @@ use Illuminate\Support\Str;
  */
 class Json
 {
-
-    /**
-     * Constructor
-     *
-     * @param null $body
-     * @param bool $prettyPrint
-     * @throws \Exception
-     */
-    public function __construct($body = null, $prettyPrint = false)
-    {
-        if (is_array($body) || is_null($body) || is_bool($body) || is_numeric($body)) {
-            $this->body = $body;
-            $this->bodyType = 'array';
-        } elseif (is_string($body)) {
-
-            // convert json string to object
-            if (Str::startsWith($body, '[') && Str::endsWith($body, ']')) {
-                $this->body = json_decode($body, true);
-            } else {
-                $body = '"'.$body.'"';
-                $this->body = json_decode($body, true);
-            }
-            $this->bodyType = 'array';
-
-        } elseif ($body instanceof \stdClass) {
-            $this->body = $body;
-            $this->bodyType = 'stdClass';
-        } else {
-            throw new \Exception('Unable to construct Json object');
-        }
-        $this->prettyPrint = $prettyPrint;
-    }
-
 
     /**
      * The main data structure for the json object
@@ -72,6 +40,46 @@ class Json
      * @var bool
      */
     protected $prettyPrint = false;
+
+    /**
+     * Constructor
+     *
+     * @param null $body
+     * @param bool $prettyPrint
+     * @throws \Exception
+     */
+    public function __construct($body = null, $prettyPrint = false)
+    {
+        if (is_array($body) || is_null($body) || is_bool($body) || is_numeric($body)) {
+            $this->body = $body;
+            $this->bodyType = 'array';
+        } elseif (is_string($body)) {
+            $body = trim($body);
+            // convert json string to object
+            if (Str::startsWith($body, '[') && Str::endsWith($body, ']')) {
+                $this->body = json_decode($body, true);
+                $this->bodyType = 'array';
+            } elseif (Str::startsWith($body, '{') && Str::endsWith($body, '}')) {
+                $jsonObject = json_decode($body);
+                if (is_null($jsonObject)) {
+                    throw new \InvalidArgumentException($body.' is not in valid json format.');
+                }
+                $this->body = $jsonObject;
+                $this->bodyType = 'stdClass';
+            } else {
+                $body = '"'.$body.'"';
+                $this->body = json_decode($body, true);
+                $this->bodyType = 'array';
+            }
+
+        } elseif ($body instanceof \stdClass) {
+            $this->body = $body;
+            $this->bodyType = 'stdClass';
+        } else {
+            throw new \Exception('Unable to construct Json object');
+        }
+        $this->prettyPrint = $prettyPrint;
+    }
 
     /**
      * @return null
@@ -128,11 +136,18 @@ class Json
      *
      * @param $key
      * @param $value
-     * @return array
+     * @return $this
+     * @throws \Exception
      */
     public function set($key, $value)
     {
-        return Arr::set($this->body, $key, $value);
+        if ($this->bodyType === 'array') {
+            Arr::set($this->body, $key, $value);
+        } elseif ($this->bodyType === 'stdClass') {
+            $this->body->$key = $value;
+        }
+
+        return $this;
     }
 
     /**
@@ -145,8 +160,7 @@ class Json
     {
         if ($this->bodyType === 'array') {
             return $this->body;
-        }
-        if ($this->bodyType === 'stdClass') {
+        } elseif ($this->bodyType === 'stdClass') {
             return static::objectToArray($this->body);
         }
     }
