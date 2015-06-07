@@ -31,17 +31,20 @@ class Json
      */
     public function __construct($body = null, $prettyPrint = false)
     {
-        // convert json string to object
-        if (is_array($body)) {
+        if (is_array($body) || is_null($body) || is_bool($body)) {
             $this->body = $body;
         } elseif (is_string($body)) {
-            $this->body = $body;
+
+            // convert json string to object
+            if (Str::startsWith($body, '[') && Str::endsWith($body, ']')) {
+                $this->body = json_decode($body, true);
+            } else {
+                $body = '"'.$body.'"';
+                $this->body = json_decode($body, true);
+            }
+
         } elseif ($body instanceof \stdClass) {
 
-        } elseif (is_null($body)) {
-            $this->body = $body;
-        } elseif (is_bool($body)) {
-            $this->body = $body;
         } else {
             throw new \Exception('Unable to construct Json object');
         }
