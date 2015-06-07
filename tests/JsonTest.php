@@ -97,6 +97,4 @@ class JsonTest extends BootstrapTest
         $this->assertEquals(null, $json->toArray());
     }
 
-
-
 }
