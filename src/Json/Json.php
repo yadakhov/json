@@ -11,6 +11,9 @@
 
 namespace Yadakhov;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 /**
  * Class Json
  *
@@ -22,33 +25,35 @@ class Json
     /**
      * Constructor
      *
-     *
-     * @param array $data
+     * @param null $body
      * @param bool $prettyPrint
      * @throws \Exception
      */
-    public function __construct($data = [], $prettyPrint = false)
+    public function __construct($body = null, $prettyPrint = false)
     {
         // convert json string to object
-        if (is_null($data)) {
-            $this->data = null;
-        } elseif (is_string($data)) {
+        if (is_array($body)) {
+            $this->body = $body;
+        } elseif (is_string($body)) {
+            $this->body = $body;
+        } elseif ($body instanceof \stdClass) {
 
-        } elseif (is_array($data)) {
-
-        } elseif ($data instanceof \stdClass) {
-
+        } elseif (is_null($body)) {
+            $this->body = $body;
+        } elseif (is_bool($body)) {
+            $this->body = $body;
         } else {
             throw new \Exception('Unable to construct Json object');
         }
         $this->prettyPrint = $prettyPrint;
     }
 
+
     /**
-     * The main data for the json object
-     * @var array|null
+     * The main data structure for the json object
+     * @var null
      */
-    protected $data = null;
+    protected $body = null;
 
     /**
      * Weather or not to use indentation in the json
@@ -63,6 +68,22 @@ class Json
     protected $indentation = '  ';
 
     /**
+     * @return null
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * @param null $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+    }
+
+    /**
      * @return boolean
      */
     public function isPrettyPrint()
@@ -71,11 +92,15 @@ class Json
     }
 
     /**
-     * @param boolean $prettyPrint
+     * Set pretty print
+     *
+     * @param $prettyPrint
+     * @return $this
      */
     public function setPrettyPrint($prettyPrint)
     {
         $this->prettyPrint = $prettyPrint;
+        return $this;
     }
 
     /**
@@ -87,7 +112,7 @@ class Json
      */
     public function get($key, $default = null)
     {
-        return array_get($this->data, $key, $default);
+        return Arr::get($this->body, $key, $default);
     }
 
     /**
@@ -99,22 +124,28 @@ class Json
      */
     public function set($key, $value)
     {
-        return Jason::arraySet($this->data, $key, $value);
+        return Arr::set($this->body, $key, $value);
     }
 
     public function toArray()
     {
-        return $this->data;
+        return $this->body;
     }
 
     public function toJson()
     {
-        return Util::arrayToObject($this->data);
+
     }
 
     public function toString()
     {
-        return (string)$this;
+        if ($this->isPrettyPrint()) {
+            $jsonString = json_encode($this->body, JSON_PRETTY_PRINT);
+        } else {
+            $jsonString = json_encode($this->body);
+        }
+
+        return $jsonString;
     }
 
     /**
@@ -124,10 +155,7 @@ class Json
      */
     public function __toString()
     {
-        if ($this->isPrettyPrint()) {
-            return json_encode($this->data, JSON_PRETTY_PRINT);
-        }
-        return json_encode($this->data);
+        return $this->toString();
     }
 
 }

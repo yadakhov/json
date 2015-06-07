@@ -14,26 +14,32 @@ use Yadakhov\Json;
 class JsonTest extends BootstrapTest
 {
 
-    public $name = [
-        'author' =>[
-            'firstName' => 'Yada',
-            'lastName' => 'Khov'
-        ]
-    ];
-
-    public function testArrayDot()
+    public function testConstructor()
     {
-        $expected = [
-            'author.firstName' => 'Yada',
-            'author.lastName' => 'Khov'
-        ];
+        $json = new Json(['name' => 'yada']);
+        $this->assertEquals('{"name":"yada"}', $json->toString());
 
-        $this->assertEquals($expected, Json::arrayDot($this->name));
+        $json = new Json(null);
+        $this->assertEquals('null', $json->toString());
+
+        $json = new Json(true);
+        $this->assertEquals('true', $json->toString());
+        $json = new Json(false);
+        $this->assertEquals('false', $json->toString());
+
+        $json = new Json('foo');
+        $this->assertEquals('"foo"', $json->toString());
+
+        $json = new Json([1, 5, "false"]);
+        $this->assertEquals('[1,5,"false"]', $json->toString());
+
+        $json = new Json('{}');
+        $this->assertEquals('"{}"', $json->toString());
     }
 
     public function testArrayGet()
     {
-        $this->assertEquals(3, Json::arrayGet($this->name, 'randomkey', null));
+
     }
 
 }
