@@ -70,5 +70,33 @@ class JsonTest extends BootstrapTest
         $this->assertEquals('{"name":"Yada"}', $json->toString());
     }
 
+    public function testToArray()
+    {
+        $obj = new stdClass();
+        $obj->name = 'Yada';
+        $json = new Json($obj);
+
+        $this->assertEquals(['name' => 'Yada'], $json->toArray());
+    }
+
+    public function testToArrayPrimitiveJson()
+    {
+        $json = new Json(9000);
+        $this->assertEquals(9000, $json->toArray());
+
+        $json = new Json(3.14);
+        $this->assertEquals(3.14, $json->toArray());
+
+        $json = new Json('string');
+        $this->assertEquals('string', $json->toArray());
+
+        $json = new Json(true);
+        $this->assertEquals(true, $json->toArray());
+
+        $json = new Json(null);
+        $this->assertEquals(null, $json->toArray());
+    }
+
+
 
 }

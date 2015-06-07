@@ -139,14 +139,20 @@ class Json
         return Arr::set($this->body, $key, $value);
     }
 
+    /**
+     * To array
+     * If the jason contains primitives this method will return the primitive type.
+     *
+     * @return array|null|\stdClass
+     */
     public function toArray()
     {
-        return $this->body;
-    }
-
-    public function toJson()
-    {
-
+        if ($this->bodyType === 'array') {
+            return $this->body;
+        }
+        if ($this->bodyType === 'stdClass') {
+            return static::objectToArray($this->body);
+        }
     }
 
     public function toString()
