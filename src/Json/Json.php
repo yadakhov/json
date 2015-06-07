@@ -45,6 +45,9 @@ class Json
 
         } elseif ($body instanceof \stdClass) {
 
+            dd($body);
+
+
         } else {
             throw new \Exception('Unable to construct Json object');
         }
