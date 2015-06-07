@@ -24,7 +24,7 @@ class Json implements JsonSerializable
 {
 
     /**
-     * The main data structure for the json object
+     * The main data structure for the json object.  Can be array or stdClass
      * @var null
      */
     protected $body = null;
@@ -128,7 +128,11 @@ class Json implements JsonSerializable
      */
     public function get($key, $default = null)
     {
-        return Arr::get($this->body, $key, $default);
+        if ($this->bodyType === 'array') {
+            return Arr::get($this->body, $key, $default);
+        } elseif ($this->bodyType === 'stdClass') {
+            return static::objectGet($this->body, $key, $default);
+        }
     }
 
     /**
@@ -229,6 +233,35 @@ class Json implements JsonSerializable
         $json = json_encode($array);
         // Convert the json string to a stdClass()
         $object = json_decode($json);
+        return $object;
+    }
+
+    /**
+     * Get an item from an object using "dot" notation.
+     *
+     * @param  stdClass   $object
+     * @param  string  $key
+     * @param  mixed   $default
+     * @return mixed
+     */
+    public static function objectGet($object, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $object;
+        }
+
+        if (property_exists($object, $key)) {
+            return $object->key;
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if (!is_object($object) || !property_exists($object, $key)) {
+                return value($default);
+            }
+
+            $object = $object->$segment;
+        }
+
         return $object;
     }
 

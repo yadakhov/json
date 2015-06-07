@@ -45,7 +45,7 @@ class JsonTest extends BootstrapTest
         $json = new Json('foo');
         $this->assertEquals('"foo"', $json->toString());
         $json = new Json('{}');
-        $this->assertEquals('"{}"', $json->toString());
+        $this->assertEquals('{}', $json->toString());
         $json = new Json('[1,5,"false"]');
         $this->assertEquals('[1,5,"false"]', $json->toString());
     }
