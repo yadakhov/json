@@ -10,7 +10,7 @@
  */
 
 require __DIR__.'/../vendor/autoload.php';
-require __DIR__.'/../src/Json/Json.php';
+require __DIR__ . '/../src/Json/Json.php';
 
 use Yadakhov\Json;
 

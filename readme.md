@@ -4,6 +4,8 @@ A simple API extension class for Json. [http://github.com/yadakhov/json](http://
 
 Use Json as a first class object in PHP.
 
+The goal of the package to to provide simple syntax such as dot notation to set and get Json field.
+
 ## Installation
 
 <a name="install-composer"/>
@@ -27,30 +29,33 @@ require 'vendor/autoload.php';
 
 use Yadakhov\Json;
 
-$json = new Json(['name' => 'Yada']);
+$json = new Json(
+    [
+        'developer' => [
+            'firstName' => 'Yada'
+        ]
+    ]
+);
 
-echo $json;  // prints {"name":"Yada"}
+echo $json;  // {"developer":{"firstName":"Yada"}}
 
-$json->set('name', 'John');
+$json->set('developer.lastName', 'Khov');
 
-echo $json;  // prints {"name":"John"}
+echo $json;  // {"developer":{"firstName":"Yada","lastName":"Khov"}}
+
+var_dump($json->toArray());
+
+array(1) {
+    ["developer"]=>
+  array(2) {
+        ["firstName"]=>
+    string(4) "Yada"
+    ["lastName"]=>
+    string(4) "Khov"
+  }
+}
 
 ```
-
-<a name="install-nocomposer"/>
-### Without Composer
-
-Why are you not using [composer](http://getcomposer.org/)? Download [Carbon.php](https://github.com/briannesbitt/Carbon/blob/master/src/Carbon/Carbon.php) from the repo and save the file into your project path somewhere.
-
-```php
-<?php
-require 'path/to/Carbon.php';
-
-use Carbon\Carbon;
-
-printf("Now: %s", Carbon::now());
-```
-
 
 ## Dependencies
 PHP 5.4 for short array syntax.
