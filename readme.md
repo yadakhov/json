@@ -29,6 +29,7 @@ require 'vendor/autoload.php';
 
 use Yadakhov\Json;
 
+// Instantiate a new Json object using standard PHP array
 $json = new Json(
     [
         'developer' => [
@@ -37,18 +38,20 @@ $json = new Json(
     ]
 );
 
-echo $json;  // {"developer":{"firstName":"Yada"}}
+echo $json;  // Object auto convert to string.  Print: {"developer":{"firstName":"Yada"}}
 
 $json->set('developer.lastName', 'Khov');
 
 echo $json;  // {"developer":{"firstName":"Yada","lastName":"Khov"}}
 
+echo $json->get('developer.firstName');  // Yada
+
 var_dump($json->toArray());
 
 array(1) {
-    ["developer"]=>
+  ["developer"]=>
   array(2) {
-        ["firstName"]=>
+    ["firstName"]=>
     string(4) "Yada"
     ["lastName"]=>
     string(4) "Khov"
