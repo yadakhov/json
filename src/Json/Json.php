@@ -31,7 +31,7 @@ class Json
      */
     public function __construct($body = null, $prettyPrint = false)
     {
-        if (is_array($body) || is_null($body) || is_bool($body)) {
+        if (is_array($body) || is_null($body) || is_bool($body) || is_numeric($body)) {
             $this->body = $body;
             $this->bodyType = 'array';
         } elseif (is_string($body)) {

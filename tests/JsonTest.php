@@ -28,6 +28,18 @@ class JsonTest extends BootstrapTest
         $this->assertEquals('false', $json->toString());
     }
 
+    public function testPassingNumericToConstructor()
+    {
+        $json = new Json(1);
+        $this->assertEquals('1', $json->toString());
+        $json = new Json(-200);
+        $this->assertEquals('-200', $json->toString());
+        $json = new Json(3.141592);
+        $this->assertEquals('3.141592', $json->toString());
+        $json = new Json(-5);
+        $this->assertEquals('-5', $json->toString());
+    }
+
     public function testPassingStringToConstructor()
     {
         $json = new Json('foo');
@@ -56,7 +68,6 @@ class JsonTest extends BootstrapTest
         $obj->name = 'Yada';
         $json = new Json($obj);
         $this->assertEquals('{"name":"Yada"}', $json->toString());
-
     }
 
 
