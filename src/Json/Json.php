@@ -33,6 +33,7 @@ class Json
     {
         if (is_array($body) || is_null($body) || is_bool($body)) {
             $this->body = $body;
+            $this->bodyType = 'array';
         } elseif (is_string($body)) {
 
             // convert json string to object
@@ -42,12 +43,11 @@ class Json
                 $body = '"'.$body.'"';
                 $this->body = json_decode($body, true);
             }
+            $this->bodyType = 'array';
 
         } elseif ($body instanceof \stdClass) {
-
-            dd($body);
-
-
+            $this->body = $body;
+            $this->bodyType = 'strClass';
         } else {
             throw new \Exception('Unable to construct Json object');
         }
@@ -60,6 +60,12 @@ class Json
      * @var null
      */
     protected $body = null;
+
+    /**
+     * The type for the body variable.  Can be array|stdClass
+     * @var string
+     */
+    protected $bodyType = 'array';
 
     /**
      * Weather or not to use indentation in the json
@@ -152,6 +158,42 @@ class Json
         }
 
         return $jsonString;
+    }
+
+    /**
+     * Convert object to array recursively
+     *
+     * @param $obj
+     * @return array
+     */
+    public static function objectToArray($obj) {
+        if (is_object($obj)) {
+            $obj = (array) $obj;
+        }
+        if (is_array($obj)) {
+            $new = [];
+            foreach ($obj as $key => $val) {
+                $new[$key] = Json::objectToArray($val);
+            }
+        } else {
+            $new = $obj;
+        }
+        return $new;
+    }
+
+    /**
+     * Convert an array into a stdClass()
+     *
+     * @param   array   $array  The array we want to convert
+     * @return  object
+     */
+    public static function arrayToObject($array)
+    {
+        // Convert the array to a json string
+        $json = json_encode($array);
+        // Convert the json string to a stdClass()
+        $object = json_decode($json);
+        return $object;
     }
 
     /**

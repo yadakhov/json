@@ -50,7 +50,13 @@ class JsonTest extends BootstrapTest
     public function testPassingStdClassToContrutor()
     {
         $json = new Json(new stdClass());
-        $this->assertEquals('', $json->toString());
+        $this->assertEquals('{}', $json->toString());
+
+        $obj = new stdClass();
+        $obj->name = 'Yada';
+        $json = new Json($obj);
+        $this->assertEquals('{"name":"Yada"}', $json->toString());
+
     }
 
 
