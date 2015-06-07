@@ -11,7 +11,6 @@
 
 namespace Yadakhov;
 
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 

@@ -1,14 +1,31 @@
 <?php
 
 require __DIR__.'/../vendor/autoload.php';
-require __DIR__.'/../src/Json/Json.php';
 
 use Yadakhov\Json;
 
-$json = new Json(['name' => 'Yada']);
+$json = new Json(
+    [
+        'developer' => [
+            'firstName' => 'Yada'
+        ]
+    ]
+);
 
-echo $json;  // prints {"name":"Yada"}
+echo $json;  // {"developer":{"firstName":"Yada"}}
 
-$json->set('name', 'John');
+$json->set('developer.lastName', 'Khov');
 
-echo $json;  // prints {"name":"John"}
+echo $json;  // {"developer":{"firstName":"Yada","lastName":"Khov"}}
+
+var_dump($json->toArray());
+
+array(1) {
+    ["developer"]=>
+  array(2) {
+        ["firstName"]=>
+    string(4) "Yada"
+    ["lastName"]=>
+    string(4) "Khov"
+  }
+}
