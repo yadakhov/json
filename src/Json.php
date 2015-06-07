@@ -13,13 +13,14 @@ namespace Yadakhov;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use JsonSerializable;
 
 /**
  * Class Json
  *
  * @package Yadakhov
  */
-class Json
+class Json implements JsonSerializable
 {
 
     /**
@@ -183,6 +184,16 @@ class Json
     public function __toString()
     {
         return $this->toString();
+    }
+
+    /**
+     * Returns data which can be serialized by json_encode(),
+     *
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 
     /**

@@ -1,30 +1,5 @@
-# [Json](http://github.com/yadakhov/json)
-
-A simple wrapper class for Json.
-
-The goal of the package is to provide dot notation syntax to work with Json datatype in PHP.
-
-Use Json as a first class object in PHP.  Use get() or set() to access any elements in the json tree. 
-
-## Installation
-
-<a name="install-composer"/>
-### With Composer
-
-```
-$ composer require yadakhov/json
-```
-
-```json
-{
-    "require": {
-        "yadakhov/json": "~1.0"
-    }
-}
-```
-
-```php
 <?php
+
 require __DIR__.'/vendor/autoload.php';
 
 use Yadakhov\Json;
@@ -71,10 +46,3 @@ echo json_encode($json, JSON_PRETTY_PRINT);
     }
 }
 */
-
-```
-
-## Dependencies
-PHP 5.4 for short array syntax.
-
-This package uses illuminate/support for the array and string helpers. Standing on the shoulders of giants.

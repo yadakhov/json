@@ -18,7 +18,7 @@
     </filter>
 
     <testsuites>
-        <testsuite name="Jason Test Suite">
+        <testsuite name="Json Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
