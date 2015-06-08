@@ -1,10 +1,15 @@
 # [Json](http://github.com/yadakhov/json)
 
 A simple wrapper class for Json.
-
-The goal of the package is to provide dot notation syntax to work with Json datatype in PHP.
-
+Provide a simple api and dot notation to work with json.
 Use Json as a first class object in PHP.  Use get() or set() to access any elements in the json tree. 
+
+```php
+$json = new Json(['status' => 'success']);
+echo $json . PHP_EOL;  // {"status":"success"}
+$json->set('status', 'winning');
+echo $json . PHP_EOL;  // {"status":"winning"}.
+``
 
 ## Installation
 

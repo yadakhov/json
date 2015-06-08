@@ -16,7 +16,10 @@ use Illuminate\Support\Str;
 use JsonSerializable;
 
 /**
- * Class Json.
+ * Class Json.  A wrapper class for json.
+ * Provide a simple api and dot notation to work with json.
+ *
+ * @package Yadakhov
  */
 class Json implements JsonSerializable
 {
