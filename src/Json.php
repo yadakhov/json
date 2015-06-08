@@ -161,25 +161,40 @@ class Json implements JsonSerializable
         }
     }
 
+    /**
+     * To string.
+     * Non pretty version.
+     *
+     * @return string
+     */
     public function toString()
     {
-        if ($this->isPrettyPrint()) {
-            $jsonString = json_encode($this->body, JSON_PRETTY_PRINT);
-        } else {
-            $jsonString = json_encode($this->body);
-        }
+        return $jsonString = json_encode($this->body);
+    }
 
-        return $jsonString;
+    /**
+     * To String Pretty Version. Add end of line character to the end.
+     *
+     * @return string
+     */
+    public function toStringPretty()
+    {
+        return json_encode($this->body, JSON_PRETTY_PRINT) . PHP_EOL;
     }
 
     /**
      * To string.
+     * Will look at $this->prettyPrint property to determine whether to do a pretty print.
      *
      * @return mixed|string|void
      */
     public function __toString()
     {
-        return $this->toString();
+        if ($this->isPrettyPrint()) {
+            return $this->toStringPretty();
+        } else {
+            return $this->toString();
+        }
     }
 
     /**

@@ -8,33 +8,26 @@ use Yadakhov\Json;
 
 $json = new Json(
     [
-        'status' => 'success',
+        'class' => 'Json',
         'data' => [
-            'name' => 'Yada',
+            'name' => 'Yada Khov',
             'job' => 'developer'
         ]
     ]
-    , true  // set pretty print to true.  (optional)
 );
 
 echo $json . PHP_EOL;
 /*
-{
-    "status": "success",
-    "data": {
-        "name": "Yada",
-        "job": "developer"
-    }
-}
+{"class":"Json","data":{"name":"Yada Khov","job":"developer"}}
 */
 
 // Use dot notation to access second level elements
 $json->set('data.name', 'Liam Neeson');
 $json->set('data.job', 'actor');
-echo $json . PHP_EOL;
+echo $json->toStringPretty() . PHP_EOL;
 /*
 {
-    "status": "success",
+    "class": "Json",
     "data": {
         "name": "Liam Neeson",
         "job": "actor"

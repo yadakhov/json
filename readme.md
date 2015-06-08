@@ -2,12 +2,12 @@
 
 A simple wrapper class for Json.
 
-Provide a simple api and dot notation for json objects in PHP.
+Work with json as a Json object in PHP.  Provide a simple api and dot notation.
 
-Use Json as a first class object in PHP.  Use get() or set() to access any elements in the json tree. 
+Use get() or set() to access any elements in the json tree. 
 
 ```php
-$json = new Json(['status' => 'success']);
+$json = new Json(['status' => 'success', 'developer' => ['name' => 'Yada Khov']);
 echo $json . PHP_EOL;  // {"status":"success"}
 $json->set('status', 'winning');
 echo $json . PHP_EOL;  // {"status":"winning"}.

@@ -22,7 +22,7 @@ object(DateTime)#2 (3) {
 
 $json = new Json($dateTime);
 
-echo $json->setPrettyPrint(true)->toString();
+echo $json->toStringPretty();
 /*
 {
     "date": "2015-06-08 06:26:11",
@@ -30,3 +30,5 @@ echo $json->setPrettyPrint(true)->toString();
     "timezone": "America\/New_York"
 }
 */
+
+var_dump($json->toArray());
