@@ -265,4 +265,18 @@ class Json implements JsonSerializable
         return $object;
     }
 
+    /**
+     * Return true is the string is a valid Json notation
+     * Note: unlike javascript quotes must be use for the key.
+     * This is not a valid json {status => "success"}.  Must be  {"status" => "success"}
+     *
+     * @param $string
+     * @return bool
+     */
+    public static function isJson($string)
+    {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
 }
