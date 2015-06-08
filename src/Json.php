@@ -16,36 +16,37 @@ use Illuminate\Support\Str;
 use JsonSerializable;
 
 /**
- * Class Json
- *
- * @package Yadakhov
+ * Class Json.
  */
 class Json implements JsonSerializable
 {
-
     /**
-     * The main data structure for the json object.  Can be array or stdClass
+     * The main data structure for the json object.  Can be array or stdClass.
+     *
      * @var null
      */
     protected $body = null;
 
     /**
-     * The type for the body variable.  Can be array|stdClass
+     * The type for the body variable.  Can be array|stdClass.
+     *
      * @var string
      */
     protected $bodyType = 'array';
 
     /**
-     *  Wether or not to use pretty print
+     *  Wether or not to use pretty print.
+     *
      * @var bool
      */
     protected $prettyPrint = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param null $body
      * @param bool $prettyPrint
+     *
      * @throws \Exception
      */
     public function __construct($body = null, $prettyPrint = false)
@@ -71,7 +72,6 @@ class Json implements JsonSerializable
                 $this->body = json_decode($body, true);
                 $this->bodyType = 'array';
             }
-
         } elseif ($body instanceof \stdClass) {
             $this->body = $body;
             $this->bodyType = 'stdClass';
@@ -82,7 +82,6 @@ class Json implements JsonSerializable
     }
 
     /**
-     * @return null
      */
     public function getBody()
     {
@@ -91,16 +90,18 @@ class Json implements JsonSerializable
 
     /**
      * @param $body
+     *
      * @return $this
      */
     public function setBody($body)
     {
         $this->body = $body;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPrettyPrint()
     {
@@ -108,22 +109,25 @@ class Json implements JsonSerializable
     }
 
     /**
-     * Set pretty print
+     * Set pretty print.
      *
      * @param $prettyPrint
+     *
      * @return $this
      */
     public function setPrettyPrint($prettyPrint)
     {
         $this->prettyPrint = $prettyPrint;
+
         return $this;
     }
 
     /**
-     * The getter return as array instead
+     * The getter return as array instead.
      *
      * @param $key
      * @param null $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -136,11 +140,13 @@ class Json implements JsonSerializable
     }
 
     /**
-     * The setter
+     * The setter.
      *
      * @param $key
      * @param $value
+     *
      * @return $this
+     *
      * @throws \Exception
      */
     public function set($key, $value)
@@ -181,7 +187,7 @@ class Json implements JsonSerializable
     }
 
     /**
-     * To string
+     * To string.
      *
      * @return mixed|string|void
      */
@@ -191,7 +197,7 @@ class Json implements JsonSerializable
     }
 
     /**
-     * Returns data which can be serialized by json_encode(),
+     * Returns data which can be serialized by json_encode().
      *
      * @return mixed
      */
@@ -203,43 +209,49 @@ class Json implements JsonSerializable
     /**
      * Return true is the string is a valid Json notation
      * Note: unlike javascript quotes must be use for the key.
-     * This is not a valid json {status => "success"}.  Must be  {"status" => "success"}
+     * This is not a valid json {status => "success"}.  Must be  {"status" => "success"}.
      *
      * @param $string
+     *
      * @return bool
      */
     public static function isJson($string)
     {
         json_decode($string);
+
         return json_last_error() === JSON_ERROR_NONE;
     }
 
     /**
-     * Convert object to array recursively
+     * Convert object to array recursively.
      *
      * @param $obj
+     *
      * @return array
      */
-    public static function objectToArray($obj) {
+    public static function objectToArray($obj)
+    {
         if (is_object($obj)) {
             $obj = (array) $obj;
         }
         if (is_array($obj)) {
             $new = [];
             foreach ($obj as $key => $val) {
-                $new[$key] = Json::objectToArray($val);
+                $new[$key] = self::objectToArray($val);
             }
         } else {
             $new = $obj;
         }
+
         return $new;
     }
 
     /**
-     * Convert an array into a stdClass()
+     * Convert an array into a stdClass().
      *
-     * @param   array   $array  The array we want to convert
-     * @return  object
+     * @param array $array The array we want to convert
+     *
+     * @return object
      */
     public static function arrayToObject($array)
     {
@@ -247,15 +259,17 @@ class Json implements JsonSerializable
         $json = json_encode($array);
         // Convert the json string to a stdClass()
         $object = json_decode($json);
+
         return $object;
     }
 
     /**
      * Get an item from an object using "dot" notation.
      *
-     * @param  stdClass   $object
-     * @param  string  $key
-     * @param  mixed   $default
+     * @param stdClass $object
+     * @param string   $key
+     * @param mixed    $default
+     *
      * @return mixed
      */
     public static function objectGet($object, $key, $default = null)
@@ -278,5 +292,4 @@ class Json implements JsonSerializable
 
         return $object;
     }
-
 }
