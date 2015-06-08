@@ -1,7 +1,9 @@
 # [Json](http://github.com/yadakhov/json)
 
 A simple wrapper class for Json.
-Provide a simple api and dot notation to work with json.
+
+Provide a simple api and dot notation for json objects in PHP.
+
 Use Json as a first class object in PHP.  Use get() or set() to access any elements in the json tree. 
 
 ```php
