@@ -4,7 +4,6 @@ require __DIR__.'/vendor/autoload.php';
 
 use Yadakhov\Json;
 
-
 $data = array(
     'developer' => array(
         'firstName' => 'Yada'

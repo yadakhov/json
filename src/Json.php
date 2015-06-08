@@ -278,4 +278,5 @@ class Json implements JsonSerializable
 
         return $object;
     }
+
 }
