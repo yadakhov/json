@@ -96,6 +96,22 @@ $json3 = new Json($object);
 echo $json3 . PHP_EOL;  // {"status":"success"}
 ```
 
+## Design decision
+All keys in a json need to be quoted to be a valid json.
+
+Bad:
+```json
+{
+    status: "success"
+}
+```
+Good:
+```json
+{
+    "status": "success"
+}
+```
+
 ## Dependencies
 PHP 5.4 for short array syntax.
 
