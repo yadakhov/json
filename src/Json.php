@@ -82,25 +82,8 @@ class Json implements JsonSerializable
     }
 
     /**
-     */
-    public function getBody()
-    {
-        return $this->body;
-    }
-
-    /**
-     * @param $body
+     * Return true if prettyPrint is set
      *
-     * @return $this
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isPrettyPrint()
