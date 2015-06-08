@@ -72,7 +72,7 @@ class Json implements JsonSerializable
                 $this->body = json_decode($body, true);
                 $this->bodyType = 'array';
             }
-        } elseif ($body instanceof \stdClass) {
+        } elseif (is_object($body)) {
             $this->body = $body;
             $this->bodyType = 'stdClass';
         } else {
