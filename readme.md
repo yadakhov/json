@@ -66,9 +66,12 @@ $row->column = (string)$json;
 
 ## API functions
 ```php
-toString() - return the Json object as a string
-toStringPretty() - json pretty print
-toArray() - return the array representation.  ie.  json_decode('...', true)
+$json->get('dot.notation') - get a field
+$json->set('dot.notation', $value) - set a field
+$json->toString() - return the Json object as a string
+$json->toStringPretty() - json pretty print
+$json->toArray() - return the array representation.  ie.  json_decode('...', true)
+(string)$json->setPrettyPrint(true) - return a json string with JSON_PRETTY_PRINT 
 Json::isJson($string) - return true if string is a valid json
 ```
 
