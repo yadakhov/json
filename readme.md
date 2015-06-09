@@ -7,10 +7,13 @@ Work with json as an object in PHP.  Provide a simple api with dot notation for 
 Use get() or set() to access any fields in the json tree.  No more json_encode and json_decode.
 
 ```php
-$json = new Json(['status' => 'success', 'developer' => ['name' => 'Yada Khov']);
-echo $json . PHP_EOL;  // {"status":"success"}
+require __DIR__.'/vendor/autoload.php';
+use Yadakhov\Json;
+
+$json = new Json(['status' => 'success', 'developer' => ['name' => 'Yada Khov']]);
+echo $json;  // {"status":"success","developer":{"name":"Yada Khov"}}
 $json->set('status', 'winning');
-echo $json . PHP_EOL;  // {"status":"winning"}.
+echo $json;  // {"status":"winning","developer":{"name":"Yada Khov"}}
 ```
 
 ## Installation
@@ -33,7 +36,6 @@ $ composer require yadakhov/json
 ```php
 <?php
 require __DIR__.'/vendor/autoload.php';
-
 use Yadakhov\Json;
 
 $data = array(
