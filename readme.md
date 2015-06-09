@@ -2,9 +2,9 @@
 
 A simple wrapper class for Json.
 
-Work with json as a Json object in PHP.  Provide a simple api and dot notation.
+Work with json as an object in PHP.  Provide a simple api with dot notation for field access.
 
-Use get() or set() to access any elements in the json tree. 
+Use get() or set() to access any fields in the json tree.  No more json_encode and json_decode.
 
 ```php
 $json = new Json(['status' => 'success', 'developer' => ['name' => 'Yada Khov']);
