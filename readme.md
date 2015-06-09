@@ -11,18 +11,17 @@ $json = new Json(['status' => 'success', 'developer' => ['name' => 'Yada Khov'])
 echo $json . PHP_EOL;  // {"status":"success"}
 $json->set('status', 'winning');
 echo $json . PHP_EOL;  // {"status":"winning"}.
-``
+```
 
 ## Installation
 
-<a name="install-composer"/>
 ### With Composer
 
 ```
 $ composer require yadakhov/json
 ```
 
-```javascript
+```json
 {
     "require": {
         "yadakhov/json": "~1.0"
@@ -36,7 +35,6 @@ $ composer require yadakhov/json
 require __DIR__.'/vendor/autoload.php';
 
 use Yadakhov\Json;
-
 
 $data = array(
     'developer' => array(
