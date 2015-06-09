@@ -12,6 +12,7 @@ use Yadakhov\Json;
 
 $json = new Json(['status' => 'success', 'developer' => ['name' => 'Yada Khov']]);
 echo $json;  // {"status":"success","developer":{"name":"Yada Khov"}}
+
 $json->set('status', 'winning');
 echo $json;  // {"status":"winning","developer":{"name":"Yada Khov"}}
 ```
