@@ -72,6 +72,11 @@ class Json implements JsonSerializable
         $this->prettyPrint = $prettyPrint;
     }
 
+    /**
+     * Parse the string json representation
+     *
+     * @param $body
+     */
     private function parseStringJson($body)
     {
         $body = trim($body);
