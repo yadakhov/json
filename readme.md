@@ -22,7 +22,7 @@ echo $json . PHP_EOL;  // {"status":"winning"}.
 $ composer require yadakhov/json
 ```
 
-```json
+```javascript
 {
     "require": {
         "yadakhov/json": "~1.0"
@@ -81,7 +81,7 @@ echo json_encode($json, JSON_PRETTY_PRINT);
 */
 ```
 
-## Creating Json objects
+## Usage: Json constructor
 ```php
 // There are three ways to instantiation a new Json object
 
@@ -101,6 +101,11 @@ $object->status = 'success';
 $json3 = new Json($object);
 
 echo $json3 . PHP_EOL;  // {"status":"success"}
+
+// 4. An valid url that returns an json string
+$json4 = new Json('https://api.ipify.org?format=json');
+
+echo $json4 . PHP_EOL;  // {"ip":"135.123.123.123"}
 ```
 
 ## Design decision
@@ -123,4 +128,5 @@ Good:
 PHP 5.4 for short array syntax.
 
 This package uses illuminate/support for the array and string helpers.
+
 Standing on the shoulders of giants.
