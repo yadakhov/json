@@ -22,7 +22,7 @@ echo $json . PHP_EOL;  // {"status":"winning"}.
 $ composer require yadakhov/json
 ```
 
-```javascript
+```json
 {
     "require": {
         "yadakhov/json": "~1.0"
