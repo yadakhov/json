@@ -60,32 +60,9 @@ class Json implements JsonSerializable
         } elseif (filter_var($body, FILTER_VALIDATE_URL) !== false) {
             // valid url is passed in
             $content = file_get_contents($body);
-            if (Str::startsWith($content, '{') && Str::endsWith($content, '}')) {
-                $data = json_decode($content, true);
-                if (is_null($data)) {
-                    throw new \InvalidArgumentException($content . ' is not in valid json format.');
-                }
-                $this->body = $data;
-                $this->bodyType = 'array';
-            }
-        } elseif (is_string($body)) {
-            $body = trim($body);
-            // convert json string to object
-            if (Str::startsWith($body, '[') && Str::endsWith($body, ']')) {
-                $this->body = json_decode($body, true);
-                $this->bodyType = 'array';
-            } elseif (Str::startsWith($body, '{') && Str::endsWith($body, '}')) {
-                $jsonObject = json_decode($body);
-                if (is_null($jsonObject)) {
-                    throw new \InvalidArgumentException($body.' is not in valid json format.');
-                }
-                $this->body = $jsonObject;
-                $this->bodyType = 'stdClass';
-            } else {
-                $body = '"'.$body.'"';
-                $this->body = json_decode($body, true);
-                $this->bodyType = 'array';
-            }
+            $this->parseStringJson($content);
+        } elseif (is_string($body)) {$body = trim($body);
+            $this->parseStringJson($body);
         } elseif (is_object($body)) {
             $this->body = $body;
             $this->bodyType = 'stdClass';
@@ -93,6 +70,27 @@ class Json implements JsonSerializable
             throw new \Exception('Unable to construct Json object');
         }
         $this->prettyPrint = $prettyPrint;
+    }
+
+    private function parseStringJson($body)
+    {
+        $body = trim($body);
+        // convert json string to object
+        if (Str::startsWith($body, '[') && Str::endsWith($body, ']')) {
+            $this->body = json_decode($body, true);
+            $this->bodyType = 'array';
+        } elseif (Str::startsWith($body, '{') && Str::endsWith($body, '}')) {
+            $jsonObject = json_decode($body);
+            if (is_null($jsonObject)) {
+                throw new \InvalidArgumentException($body.' is not in valid json format.');
+            }
+            $this->body = $jsonObject;
+            $this->bodyType = 'stdClass';
+        } else {
+            $body = '"'.$body.'"';
+            $this->body = json_decode($body, true);
+            $this->bodyType = 'array';
+        }
     }
 
     /**
