@@ -32,56 +32,9 @@ $ composer require yadakhov/json
 }
 ```
 
-## Usage
-```php
-<?php
-require __DIR__.'/vendor/autoload.php';
-use Yadakhov\Json;
+## Usage: The Constructor
+Overloaded to accept array, php objects, json encoded string, and valid URLs. 
 
-$data = array(
-    'developer' => array(
-        'firstName' => 'Yada'
-    )
-);
-// Instantiate a new Json object using standard PHP array
-$json = new Json($data);
-
-echo $json.PHP_EOL;  // print: {"developer":{"firstName":"Yada"}}
-
-$json->set('developer.lastName', 'Khov');
-
-echo $json.PHP_EOL;  // print: {"developer":{"firstName":"Yada","lastName":"Khov"}}
-
-echo $json->get('developer.firstName').PHP_EOL;  // print: Yada
-
-var_dump($json->toArray());
-
-/*
-array(1) {
-  ["developer"]=>
-  array(2) {
-    ["firstName"]=>
-    string(4) "Yada"
-    ["lastName"]=>
-    string(4) "Khov"
-  }
-}
-*/
-
-// It is json JsonSerializable
-echo json_encode($json, JSON_PRETTY_PRINT);
-
-/*
-{
-    "developer": {
-    "firstName": "Yada",
-        "lastName": "Khov"
-    }
-}
-*/
-```
-
-## Usage: Json constructor
 ```php
 // There are three ways to instantiation a new Json object
 
