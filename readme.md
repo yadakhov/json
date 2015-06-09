@@ -36,7 +36,7 @@ $ composer require yadakhov/json
 Overloaded to accept array, php objects, json encoded string, and valid URLs. 
 
 ```php
-// There are three ways to instantiation a new Json object
+// There are four ways to instantiation a new Json object
 
 // 1. PHP array
 $json1 = new Json(['status' => 'success']);
@@ -59,6 +59,17 @@ echo $json3 . PHP_EOL;  // {"status":"success"}
 $json4 = new Json('https://api.ipify.org?format=json');
 
 echo $json4 . PHP_EOL;  // {"ip":"135.123.123.123"}
+
+// cast (string) for __toString()
+$row->column = (string)$json;
+```
+
+## API functions
+```php
+toString() - return the Json object as a string
+toStringPretty() - json pretty print
+toArray() - return the array representation.  ie.  json_decode('...', true)
+Json::isJson($string) - return true if string is a valid json
 ```
 
 ## Design decision
