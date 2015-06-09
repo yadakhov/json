@@ -31,13 +31,6 @@ class Json implements JsonSerializable
     protected $body = null;
 
     /**
-     * The type for the body variable.  Can be array|stdClass.
-     *
-     * @var string
-     */
-    protected $bodyType = 'array';
-
-    /**
      *  Wether or not to use pretty print.
      *
      * @var bool
@@ -56,39 +49,34 @@ class Json implements JsonSerializable
     {
         if (is_array($body) || is_null($body) || is_bool($body) || is_numeric($body)) {
             $this->body = $body;
-            $this->bodyType = 'array';
         } elseif (filter_var($body, FILTER_VALIDATE_URL) !== false) {
-            // valid url is passed in
+            // A valid url is passed in
             $content = file_get_contents($body);
+            $content = trim($content);
             if (Str::startsWith($content, '{') && Str::endsWith($content, '}')) {
                 $data = json_decode($content, true);
                 if (is_null($data)) {
                     throw new \InvalidArgumentException($content . ' is not in valid json format.');
                 }
                 $this->body = $data;
-                $this->bodyType = 'array';
             }
         } elseif (is_string($body)) {
             $body = trim($body);
             // convert json string to object
             if (Str::startsWith($body, '[') && Str::endsWith($body, ']')) {
                 $this->body = json_decode($body, true);
-                $this->bodyType = 'array';
             } elseif (Str::startsWith($body, '{') && Str::endsWith($body, '}')) {
-                $jsonObject = json_decode($body);
-                if (is_null($jsonObject)) {
+                $data = json_decode($body, true);
+                if (is_null($data)) {
                     throw new \InvalidArgumentException($body.' is not in valid json format.');
                 }
-                $this->body = $jsonObject;
-                $this->bodyType = 'stdClass';
+                $this->body = $data;
             } else {
                 $body = '"'.$body.'"';
                 $this->body = json_decode($body, true);
-                $this->bodyType = 'array';
             }
         } elseif (is_object($body)) {
-            $this->body = $body;
-            $this->bodyType = 'stdClass';
+            $this->body = Json::objectToArray($body);
         } else {
             throw new \Exception('Unable to construct Json object');
         }
@@ -129,11 +117,7 @@ class Json implements JsonSerializable
      */
     public function get($key, $default = null)
     {
-        if ($this->bodyType === 'array') {
-            return Arr::get($this->body, $key, $default);
-        } elseif ($this->bodyType === 'stdClass') {
-            return static::objectGet($this->body, $key, $default);
-        }
+        return Arr::get($this->body, $key, $default);
     }
 
     /**
@@ -148,12 +132,7 @@ class Json implements JsonSerializable
      */
     public function set($key, $value)
     {
-        if ($this->bodyType === 'array') {
-            Arr::set($this->body, $key, $value);
-        } elseif ($this->bodyType === 'stdClass') {
-            $this->body->$key = $value;
-        }
-
+        Arr::set($this->body, $key, $value);
         return $this;
     }
 
@@ -165,11 +144,7 @@ class Json implements JsonSerializable
      */
     public function toArray()
     {
-        if ($this->bodyType === 'array') {
-            return $this->body;
-        } elseif ($this->bodyType === 'stdClass') {
-            return static::objectToArray($this->body);
-        }
+        return $this->body;
     }
 
     /**
@@ -241,23 +216,21 @@ class Json implements JsonSerializable
      *
      * @return array
      */
-    public static function objectToArray($obj)
-    {
+    protected function objectToArray($obj) {
         if (is_object($obj)) {
-            $obj = (array) $obj;
+            // Gets the properties of the given object
+            // with get_object_vars function
+            $obj = get_object_vars($obj);
         }
+
         if (is_array($obj)) {
-            $new = [];
-            foreach ($obj as $key => $val) {
-                $new[$key] = self::objectToArray($val);
-            }
+            // Return array converted to object for recursive call
+            return array_map(__FUNCTION__, $obj);
         } else {
-            $new = $obj;
+            // Return array
+            return $obj;
         }
-
-        return $new;
     }
-
     /**
      * Convert an array into a stdClass().
      *
@@ -271,36 +244,6 @@ class Json implements JsonSerializable
         $json = json_encode($array);
         // Convert the json string to a stdClass()
         $object = json_decode($json);
-
-        return $object;
-    }
-
-    /**
-     * Get an item from an object using "dot" notation.
-     *
-     * @param stdClass $object
-     * @param string   $key
-     * @param mixed    $default
-     *
-     * @return mixed
-     */
-    public static function objectGet($object, $key, $default = null)
-    {
-        if (is_null($key)) {
-            return $object;
-        }
-
-        if (property_exists($object, $key)) {
-            return $object->$key;
-        }
-
-        foreach (explode('.', $key) as $segment) {
-            if (property_exists($object, $segment)) {
-                $object = $object->$segment;
-            } else {
-                return value($default);
-            }
-        }
 
         return $object;
     }
