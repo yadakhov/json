@@ -57,6 +57,17 @@ class Json implements JsonSerializable
         if (is_array($body) || is_null($body) || is_bool($body) || is_numeric($body)) {
             $this->body = $body;
             $this->bodyType = 'array';
+        } elseif (filter_var($body, FILTER_VALIDATE_URL) !== false) {
+            // valid url is passed in
+            $content = file_get_contents($body);
+            if (Str::startsWith($content, '{') && Str::endsWith($content, '}')) {
+                $data = json_decode($content, true);
+                if (is_null($data)) {
+                    throw new \InvalidArgumentException($content . ' is not in valid json format.');
+                }
+                $this->body = $data;
+                $this->bodyType = 'array';
+            }
         } elseif (is_string($body)) {
             $body = trim($body);
             // convert json string to object

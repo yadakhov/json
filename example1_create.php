@@ -23,3 +23,9 @@ $object->status = 'success';
 $json3 = new Json($object);
 
 echo $json3 . PHP_EOL;  // {"status":"success"}
+
+// 4. An valid url that returns an json
+$json4 = new Json('https://api.ipify.org?format=json');
+
+echo $json4 . PHP_EOL;  // {"ip":"135.123.123.123"}
+
