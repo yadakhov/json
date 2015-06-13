@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Json package.
  *
@@ -38,7 +37,7 @@ class Json implements JsonSerializable
     protected $bodyType = 'array';
 
     /**
-     *  Wether or not to use pretty print.
+     *  Whether or not to use pretty print.
      *
      * @var bool
      */
@@ -70,6 +69,17 @@ class Json implements JsonSerializable
             throw new \Exception('Unable to construct Json object');
         }
         $this->prettyPrint = $prettyPrint;
+    }
+
+    /**
+     * The factory method.
+     * Returns a new Jason object.
+     *
+     * @return Json
+     */
+    public static function create()
+    {
+        return new Json;
     }
 
     /**
@@ -161,8 +171,8 @@ class Json implements JsonSerializable
     }
 
     /**
-     * To array
-     * If the jason contains primitives this method will return the primitive type.
+     * To array.  Get the array version of the body.
+     * If the json contains primitives this method will return the primitive type.
      *
      * @return array|null|\stdClass
      */
@@ -197,7 +207,7 @@ class Json implements JsonSerializable
     }
 
     /**
-     * To string.
+     * To string for used in casting.  (strong)$json
      * Will look at $this->prettyPrint property to determine whether to do a pretty print.
      *
      * @return mixed|string|void
