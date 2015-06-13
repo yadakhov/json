@@ -97,4 +97,20 @@ class JsonTest extends BootstrapTest
         $this->assertEquals(null, $json->toArray());
     }
 
+    public function testCreateFactoryMethod()
+    {
+        $json = Json::create();
+
+        $this->assertTrue($json instanceof Json);
+    }
+
+    public function testMagicGetter()
+    {
+        // pass by json
+        $json = new Json('{"key":"value"}');
+        $this->assertEquals('value', $json->key);
+
+        $json = new Json(['name' => 'Yada Khov']);
+        $this->assertEquals('Yada Khov', $json->name);
+    }
 }

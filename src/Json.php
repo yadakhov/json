@@ -222,6 +222,24 @@ class Json implements JsonSerializable
     }
 
     /**
+     * PHP get magic function.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if ($this->bodyType === 'array' && Arr::has($this->body, $name)) {
+            return Arr::get($this->body, $name);
+        } elseif ($this->bodyType === 'stdClass' && isset($this->body->{$name})) {
+            return $this->body->{$name};
+        }
+
+        throw new \Exception(sprintf('Non-existent property %s.', $name));
+    }
+
+    /**
      * Returns data which can be serialized by json_encode().
      *
      * @return mixed
