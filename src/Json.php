@@ -226,7 +226,7 @@ class Json implements JsonSerializable
      *
      * @param $name
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function __get($name)
     {

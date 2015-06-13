@@ -15,6 +15,11 @@ echo $json;  // {"status":"success","developer":{"name":"Yada Khov"}}
 
 $json->set('status', 'winning');
 echo $json;  // {"status":"winning","developer":{"name":"Yada Khov"}}
+
+// create with any json API endpoints
+$json = new Json('http://www.reddit.com/.json');
+echo $json->kind;  // Listing
+//
 ```
 
 ## Installation
@@ -25,12 +30,14 @@ echo $json;  // {"status":"winning","developer":{"name":"Yada Khov"}}
 $ composer require yadakhov/json
 ```
 
-```json
-{
-    "require": {
-        "yadakhov/json": "~1.0"
-    }
-}
+### Old fashion php
+```php
+// download src/Json.php to your code folder..
+require_once '/path/to/Json.php';
+
+use Yadakhov/Json;
+
+$json = new Json();
 ```
 
 ## Usage: The Constructor
