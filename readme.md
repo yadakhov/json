@@ -84,6 +84,12 @@ Json::isJson($string) - return true if string is a valid json
 ```
 
 ## Design decision
+Internally, if you passed an array() to the constructor, the json object will be stored internally as an array.
+
+If you pass a stdClass or json encoded string, the json object will be stored internally as a php stdCLass.
+
+The reason for this design decision to is take care of some edge cases when an array '[]' is passed and it retusn as '{}';
+
 All keys in a json need to be quoted to be a valid json.
 
 Bad:
