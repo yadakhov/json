@@ -88,7 +88,7 @@ Internally, if you passed an array() to the constructor, the json object will be
 
 If you pass a stdClass or json encoded string, the json object will be stored internally as a php stdCLass.
 
-The reason for this design decision to is take care of some edge cases when an array '[]' is passed and it retusn as '{}';
+The reason for this design decision to is take care of some edge cases when an array [] is passed and it {} is returned.
 
 All keys in a json need to be quoted to be a valid json.
 
