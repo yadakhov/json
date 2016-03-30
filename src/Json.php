@@ -240,6 +240,18 @@ class Json implements JsonSerializable
     }
 
     /**
+     * PHP isset magic function.
+     *
+     * @param $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return ($this->bodyType === 'array' && Arr::has($this->body, $name))
+            || ($this->bodyType === 'stdClass' && isset($this->body->{$name}));
+    }
+
+    /**
      * Returns data which can be serialized by json_encode().
      *
      * @return mixed
