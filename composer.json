@@ -1,23 +1,17 @@
 {
     "name": "yadakhov/json",
-    "type": "library",
     "description": "A simple API extension class for Json.",
-    "keywords": [
-        "json",
-        "api"
-    ],
     "homepage": "https://github.com/yadakhov/json",
     "license": "MIT",
     "authors": [
         {
             "name": "Yada Khov",
-            "email": "yada.khov@gmail.com",
-            "homepage": "http://yadakhov.com"
+            "email": "yada.khov@gmail.com"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "5.1.*",
+        "illuminate/support": "~5.0",
         "symfony/var-dumper": "2.7.*"
     },
     "require-dev": {
@@ -27,5 +21,9 @@
         "psr-4": {
             "Yadakhov\\": "src/"
         }
-    }
+    },
+    "keywords": [
+        "json",
+        "api"
+    ]
 }
