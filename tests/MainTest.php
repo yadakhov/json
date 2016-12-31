@@ -1,4 +1,4 @@
-<?php
+h<?php
 
 use Yadakhov\Json;
 
@@ -97,13 +97,34 @@ class MainTest extends TestCase
         $this->assertTrue($json instanceof Json);
     }
 
-    public function testMagicGetter()
+    public function testGetter()
     {
         // pass by json
         $json = new Json('{"key":"value"}');
+        $this->assertEquals('value', $json->get('key'));
         $this->assertEquals('value', $json->key);
 
         $json = new Json(['name' => 'Yada Khov']);
+        $this->assertEquals('Yada Khov', $json->get('name'));
         $this->assertEquals('Yada Khov', $json->name);
+    }
+
+    public function testSetter()
+    {
+        $json = new Json('{"key":"value"}');
+        $json->set('key', 'newvalue');
+        $this->assertEquals('{"key":"newvalue"}', $json);
+
+        $json = new Json('{"key":"value"}');
+        $json->key = 'newvalue';
+        $this->assertEquals('{"key":"newvalue"}', $json);
+
+        $json = new Json('{"data": {"userId": 1234}}');
+        $json->set('data.userId', 1000);
+        $this->assertEquals('{"data":{"userId":1000}}', $json);
+
+        $json = new Json('{"data": {"userId": 1234}}');
+        $json->{'data.userId'} = 1000;
+        $this->assertEquals('{"data":{"userId":1000}}', $json);
     }
 }

@@ -95,8 +95,18 @@ class Json implements JsonSerializable
     }
 
     /**
+     * To string for used in casting.  (string)$json
+     * Will look at $this->prettyPrint property to determine whether to do a pretty print.
+     *
+     * @return mixed|string|void
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
      * To string.
-     * Non pretty version.
      *
      * @return string
      */
@@ -116,14 +126,15 @@ class Json implements JsonSerializable
     }
 
     /**
-     * To string for used in casting.  (string)$json
-     * Will look at $this->prettyPrint property to determine whether to do a pretty print.
+     * PHP get magic function.
      *
-     * @return mixed|string|void
+     * @param $name
+     * @return mixed
+     * @throws \Exception
      */
-    public function __toString()
+    public function __set($name, $value)
     {
-        return $this->toString();
+        return $this->set($name, $value);
     }
 
     /**
@@ -135,18 +146,29 @@ class Json implements JsonSerializable
      */
     public function __get($name)
     {
-        return Arr::get($this->data, $name);
+        return $this->get($name);
     }
 
     /**
      * PHP isset magic function.
-     *
+     *<
      * @param $name
      * @return bool
      */
     public function __isset($name)
     {
         return Arr::has($this->data, $name);
+    }
+
+    /**
+     * PHP unset magic function.
+     *
+     * @param $name
+     * @return bool
+     */
+    public function __unset($name)
+    {
+        return $this->set($name, null);
     }
 
     /**
