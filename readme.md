@@ -1,5 +1,9 @@
 # [Json](http://github.com/yadakhov/json)
 
+[![Latest Stable Version](https://poser.pugx.org/yadakhov/json/version)](https://packagist.org/packages/yadakhov/json)
+[![License](https://poser.pugx.org/yadakhov/json/license)](https://packagist.org/packages/yadakhov/json)
+[![Build Status](https://travis-ci.org/yadakhov/json.svg)](https://travis-ci.org/yadakhov/json)
+
 A simple wrapper class for working with Json.
 
 Work with json as an object in PHP.  Provides a simple api with dot notation for field access.
