@@ -130,11 +130,21 @@ class MainTest extends TestCase
 
     public function testDot()
     {
-        // doesn't do anything for one level array
         $json = new Json('{"key":"value"}');
         $this->assertEquals(['key' => 'value'], $json->dot());
 
         $json = new Json('{"data": {"userId": 1234}}');
         $this->assertEquals(['data.userId' => 1234], $json->dot());
+    }
+
+    public function testToStringDot()
+    {
+        $json = new Json('{"data": {"userId": 1234}}');
+
+        $expected = '{' . PHP_EOL .
+            '    "data.userId": 1234'. PHP_EOL .
+            '}' . PHP_EOL;
+
+        $this->assertEquals($expected, $json->toStringDot());
     }
 }

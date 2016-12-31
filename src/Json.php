@@ -126,6 +126,16 @@ class Json implements JsonSerializable
     }
 
     /**
+     * To string dot.
+     *
+     * @return string
+     */
+    public function toStringDot()
+    {
+        return json_encode($this->dot(), JSON_PRETTY_PRINT) . PHP_EOL;
+    }
+
+    /**
      * To String Pretty Version. Add end of line character to the end.
      *
      * @return string
