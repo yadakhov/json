@@ -1,12 +1,4 @@
 <?php
-/*
- * This file is part of the Json package.
- *
- * (c) Yada Khov <yada.khov@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace Yadakhov;
 
@@ -15,121 +7,50 @@ use Illuminate\Support\Str;
 use JsonSerializable;
 
 /**
- * Class Json.  A wrapper class for json.
- * Provide a simple api and dot notation to work with json.
+ * Class Json.
+ * A simple class to work with json as an object.
  *
  * @package Yadakhov
  */
 class Json implements JsonSerializable
 {
     /**
-     * The main data structure for the json object.  Can be array or stdClass.
+     * The main data for the json object.
      *
-     * @var null
+     * @var mixed|null
      */
-    protected $body = null;
+    protected $data = null;
 
     /**
-     * The type for the body variable.  Can be array|stdClass.
+     * Json constructor.
      *
-     * @var string
-     */
-    protected $bodyType = 'array';
-
-    /**
-     *  Whether or not to use pretty print.
-     *
-     * @var bool
-     */
-    protected $prettyPrint = false;
-
-    /**
-     * Constructor.
-     *
-     * @param null $body
-     * @param bool $prettyPrint
-     *
+     * @param null $data
      * @throws \Exception
      */
-    public function __construct($body = null, $prettyPrint = false)
+    public function __construct($data = null)
     {
-        if (is_array($body) || is_null($body) || is_bool($body) || is_numeric($body)) {
-            $this->body = $body;
-            $this->bodyType = 'array';
-        } elseif (filter_var($body, FILTER_VALIDATE_URL) !== false) {
-            // valid url is passed in
-            $content = file_get_contents($body);
-            $this->parseStringJson($content);
-        } elseif (is_string($body)) {$body = trim($body);
-            $this->parseStringJson($body);
-        } elseif (is_object($body)) {
-            $this->body = $body;
-            $this->bodyType = 'stdClass';
+        if (is_array($data) || is_null($data) || is_bool($data) || is_numeric($data)) {
+            $this->data = $data;
+        } elseif (is_string($data)) {
+            $this->data = json_decode($data, true);
+
+            if (json_last_error()) {
+                throw new \Exception('Unable to parse json string: \'' . $data . '\'. ' . json_last_error_msg());
+            }
         } else {
-            throw new \Exception('Unable to construct Json object');
+            throw new \Exception('Unable to construct Json object with: ' . json_encode($data));
         }
-        $this->prettyPrint = $prettyPrint;
     }
 
     /**
-     * The factory method.
-     * Returns a new Jason object.
+     * Get an instance of the object.
      *
+     * @param null $data
      * @return Json
      */
-    public static function create()
+    public static function getInstance($data = null)
     {
-        return new Json;
-    }
-
-    /**
-     * Parse the string json representation
-     *
-     * @param $body
-     */
-    private function parseStringJson($body)
-    {
-        $body = trim($body);
-        // convert json string to object
-        if (Str::startsWith($body, '[') && Str::endsWith($body, ']')) {
-            $this->body = json_decode($body, true);
-            $this->bodyType = 'array';
-        } elseif (Str::startsWith($body, '{') && Str::endsWith($body, '}')) {
-            $jsonObject = json_decode($body);
-            if (is_null($jsonObject)) {
-                throw new \InvalidArgumentException($body.' is not in valid json format.');
-            }
-            $this->body = $jsonObject;
-            $this->bodyType = 'stdClass';
-        } else {
-            $body = '"'.$body.'"';
-            $this->body = json_decode($body, true);
-            $this->bodyType = 'array';
-        }
-    }
-
-    /**
-     * Return true if prettyPrint is set
-     *
-     * @return bool
-     */
-    public function isPrettyPrint()
-    {
-        return $this->prettyPrint;
-    }
-
-    /**
-     * Set pretty print.
-     *
-     * @param $prettyPrint
-     *
-     * @return $this
-     */
-    public function setPrettyPrint($prettyPrint)
-    {
-        $this->prettyPrint = $prettyPrint;
-
-        return $this;
+        return new Json($data);
     }
 
     /**
@@ -142,11 +63,7 @@ class Json implements JsonSerializable
      */
     public function get($key, $default = null)
     {
-        if ($this->bodyType === 'array') {
-            return Arr::get($this->body, $key, $default);
-        } elseif ($this->bodyType === 'stdClass') {
-            return static::objectGet($this->body, $key, $default);
-        }
+        return Arr::get($this->data, $key, $default);
     }
 
     /**
@@ -161,39 +78,61 @@ class Json implements JsonSerializable
      */
     public function set($key, $value)
     {
-        if ($this->bodyType === 'array') {
-            Arr::set($this->body, $key, $value);
-        } elseif ($this->bodyType === 'stdClass') {
-            $this->body->$key = $value;
-        }
+        Arr::set($this->data, $key, $value);
 
         return $this;
     }
 
     /**
-     * To array.  Get the array version of the body.
+     * @param string $prepend
+     *
+     * @return array
+     */
+    public function dot($prepend = '')
+    {
+        return Arr::dot($this->data, $prepend);
+    }
+
+    /**
+     * To array.
      * If the json contains primitives this method will return the primitive type.
      *
-     * @return array|null|\stdClass
+     * @return mixed|null
      */
     public function toArray()
     {
-        if ($this->bodyType === 'array') {
-            return $this->body;
-        } elseif ($this->bodyType === 'stdClass') {
-            return static::objectToArray($this->body);
-        }
+        return $this->data;
+    }
+
+    /**
+     * To string for used in casting.  (string)$json
+     * Will look at $this->prettyPrint property to determine whether to do a pretty print.
+     *
+     * @return mixed|string|void
+     */
+    public function __toString()
+    {
+        return $this->toString();
     }
 
     /**
      * To string.
-     * Non pretty version.
      *
      * @return string
      */
     public function toString()
     {
-        return $jsonString = json_encode($this->body);
+        return json_encode($this->data);
+    }
+
+    /**
+     * To string dot.
+     *
+     * @return string
+     */
+    public function toStringDot()
+    {
+        return json_encode($this->dot(), JSON_PRETTY_PRINT) . PHP_EOL;
     }
 
     /**
@@ -203,22 +142,19 @@ class Json implements JsonSerializable
      */
     public function toStringPretty()
     {
-        return json_encode($this->body, JSON_PRETTY_PRINT) . PHP_EOL;
+        return json_encode($this->data, JSON_PRETTY_PRINT) . PHP_EOL;
     }
 
     /**
-     * To string for used in casting.  (strong)$json
-     * Will look at $this->prettyPrint property to determine whether to do a pretty print.
+     * PHP get magic function.
      *
-     * @return mixed|string|void
+     * @param $name
+     * @return mixed
+     * @throws \Exception
      */
-    public function __toString()
+    public function __set($name, $value)
     {
-        if ($this->isPrettyPrint()) {
-            return $this->toStringPretty();
-        } else {
-            return $this->toString();
-        }
+        return $this->set($name, $value);
     }
 
     /**
@@ -230,25 +166,29 @@ class Json implements JsonSerializable
      */
     public function __get($name)
     {
-        if ($this->bodyType === 'array' && Arr::has($this->body, $name)) {
-            return Arr::get($this->body, $name);
-        } elseif ($this->bodyType === 'stdClass' && isset($this->body->{$name})) {
-            return $this->body->{$name};
-        }
-
-        throw new \Exception(sprintf('Non-existent property %s.', $name));
+        return $this->get($name);
     }
 
     /**
      * PHP isset magic function.
-     *
+     *<
      * @param $name
      * @return bool
      */
     public function __isset($name)
     {
-        return ($this->bodyType === 'array' && Arr::has($this->body, $name))
-            || ($this->bodyType === 'stdClass' && isset($this->body->{$name}));
+        return Arr::has($this->data, $name);
+    }
+
+    /**
+     * PHP unset magic function.
+     *
+     * @param $name
+     * @return bool
+     */
+    public function __unset($name)
+    {
+        return $this->set($name, null);
     }
 
     /**
@@ -262,9 +202,7 @@ class Json implements JsonSerializable
     }
 
     /**
-     * Return true is the string is a valid Json notation
-     * Note: unlike javascript quotes must be use for the key.
-     * This is not a valid json {status => "success"}.  Must be  {"status" => "success"}.
+     * Return true is the string is a valid Json notation.
      *
      * @param $string
      *
@@ -276,76 +214,4 @@ class Json implements JsonSerializable
 
         return json_last_error() === JSON_ERROR_NONE;
     }
-
-    /**
-     * Convert object to array recursively.
-     *
-     * @param $obj
-     *
-     * @return array
-     */
-    public static function objectToArray($obj)
-    {
-        if (is_object($obj)) {
-            $obj = (array) $obj;
-        }
-        if (is_array($obj)) {
-            $new = [];
-            foreach ($obj as $key => $val) {
-                $new[$key] = self::objectToArray($val);
-            }
-        } else {
-            $new = $obj;
-        }
-
-        return $new;
-    }
-
-    /**
-     * Convert an array into a stdClass().
-     *
-     * @param array $array The array we want to convert
-     *
-     * @return object
-     */
-    public static function arrayToObject($array)
-    {
-        // Convert the array to a json string
-        $json = json_encode($array);
-        // Convert the json string to a stdClass()
-        $object = json_decode($json);
-
-        return $object;
-    }
-
-    /**
-     * Get an item from an object using "dot" notation.
-     *
-     * @param stdClass $object
-     * @param string   $key
-     * @param mixed    $default
-     *
-     * @return mixed
-     */
-    public static function objectGet($object, $key, $default = null)
-    {
-        if (is_null($key)) {
-            return $object;
-        }
-
-        if (property_exists($object, $key)) {
-            return $object->$key;
-        }
-
-        foreach (explode('.', $key) as $segment) {
-            if (property_exists($object, $segment)) {
-                $object = $object->$segment;
-            } else {
-                return value($default);
-            }
-        }
-
-        return $object;
-    }
-
 }
