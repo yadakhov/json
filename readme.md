@@ -111,3 +111,9 @@ PHP 5.4 for short array syntax.
 This package uses illuminate/support for the array and string helpers.
 
 Standing on the shoulders of giants.
+
+## Run tests
+
+```
+./vendor/bin/phpunit 
+```
