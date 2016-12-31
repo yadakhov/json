@@ -127,4 +127,14 @@ class MainTest extends TestCase
         $json->{'data.userId'} = 1000;
         $this->assertEquals('{"data":{"userId":1000}}', $json);
     }
+
+    public function testDot()
+    {
+        // doesn't do anything for one level array
+        $json = new Json('{"key":"value"}');
+        $this->assertEquals(['key' => 'value'], $json->dot());
+
+        $json = new Json('{"data": {"userId": 1234}}');
+        $this->assertEquals(['data.userId' => 1234], $json->dot());
+    }
 }

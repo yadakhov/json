@@ -84,6 +84,16 @@ class Json implements JsonSerializable
     }
 
     /**
+     * @param string $prepend
+     *
+     * @return array
+     */
+    public function dot($prepend = '')
+    {
+        return Arr::dot($this->data, $prepend);
+    }
+
+    /**
      * To array.
      * If the json contains primitives this method will return the primitive type.
      *
